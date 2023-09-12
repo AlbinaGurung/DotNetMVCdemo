@@ -1,27 +1,24 @@
-﻿@model MyProject2.ViewModels.ProductEditVm
-<form method="post">
+﻿@using MyProject2.ViewModels
+@model MyProject2.ViewModels.ProductEditVm
+<form action="submit" method="post">
 <div class="row">
 <div class="col-4">
     <div class="card">
         <div class="card-body">
 
-    
+                    @{
+                        var Item = new ProductEditVm();
+                        Item=Model;
+                    }
      
     <label asp-for="ProductName"></label>
-    <input type="text" class="form-control">
+    <input asp-for="ProductName" type="text" class="form-control">@Item.ProductName
     <span asp-validation-for="ProductName" class="text-danger"></span>
 
     
-     <label asp-for="ProductDescription"></label>
-    <input type="text" class="form-control">
-    <span asp-validation-for="ProductDescription" class="text-danger"></span>
-
-     <label asp-for="Price"></label>
-    <input type="text" class="form-control">
-    <span asp-validation-for="Price" class="text-danger"></span>
 
      <div class="form-group">
-      <button class="btn btn-submit">Save</button>
+      <button class="btn btn-submit" type="submit">Save</button>
        </div>
      </div>
      </div>
@@ -29,3 +26,4 @@
      </div>
    
 </form>
+

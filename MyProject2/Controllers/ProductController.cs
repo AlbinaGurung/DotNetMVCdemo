@@ -66,8 +66,7 @@ namespace MyProject2.Controllers
                 //giving that found item to the view model to display it to the page
                 var vm = new ProductEditVm();
                 vm.ProductName=item.ProductName;
-                vm.Price=item.Price;
-                vm.ProductDescription=item.ProductDescription;
+                
                 return View(vm);
             }
             catch (Exception )
@@ -80,7 +79,8 @@ namespace MyProject2.Controllers
         [HttpPost]
         public IActionResult Edit(int id, ProductEditVm vm)
         {
-            var item = ProductList.Where(x => x.ProductId==id).FirstOrDefault();
+            var item= ProductList.FirstOrDefault(x => x.ProductId==id);
+           
             try
             {
                 if (item==null)
@@ -90,17 +90,13 @@ namespace MyProject2.Controllers
 
 
                 item.ProductName=vm.ProductName;
-
+                
                 return RedirectToAction("Index");
-                if (!ModelState.IsValid)
-                {
-                    return View(vm);
-                }
             }
 
             catch (Exception e)
             {
-                RedirectToAction("Index");
+                RedirectToAction("Index"+e);
             }
                 return View();
         }

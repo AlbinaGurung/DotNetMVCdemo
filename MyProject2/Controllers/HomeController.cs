@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using MyProject2.Models;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 
 namespace MyProject2.Controllers
@@ -12,6 +15,24 @@ namespace MyProject2.Controllers
         {
             _logger = logger;
         }
+
+        public void TestDBconnection()
+        {
+            try
+            {
+                string ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings  ["Server=DESKTOP-B3HCI17\\SQLEXPRESS;Database=MeroDatabase;User Id=sa;Password=sa; TrustServerCertificate = true"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    ViewBag.Message = "Database connection is successful!";
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = "Error: " + ex.Message;
+            }
+        }
+
 
         public IActionResult Index()
         {
