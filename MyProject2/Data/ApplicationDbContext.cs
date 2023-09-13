@@ -14,6 +14,7 @@ namespace MyProject2.Data
         {
          
         }
+
         public DbSet<Product1> Units { get; set; }
     }
 }

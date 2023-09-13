@@ -6,13 +6,9 @@
     <div class="card">
         <div class="card-body">
 
-                    @{
-                        var Item = new ProductEditVm();
-                        Item=Model;
-                    }
-     
+                    
     <label asp-for="ProductName"></label>
-    <input asp-for="ProductName" type="text" class="form-control">@Item.ProductName
+    <input asp-for="ProductName" type="text" class="form-control">
     <span asp-validation-for="ProductName" class="text-danger"></span>
 
     
