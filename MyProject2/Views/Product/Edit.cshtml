@@ -1,15 +1,19 @@
 ﻿@using MyProject2.ViewModels
 @model MyProject2.ViewModels.ProductEditVm
-<form action="submit" method="post">
+<form  method="post">
 <div class="row">
 <div class="col-4">
     <div class="card">
         <div class="card-body">
 
                     
-    <label asp-for="ProductName"></label>
-    <input asp-for="ProductName" type="text" class="form-control">
-    <span asp-validation-for="ProductName" class="text-danger"></span>
+    <label asp-for="Name"></label>
+    <input asp-for="Name" type="text" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+     <label asp-for="Price"></label>
+    <input asp-for="Price" type="text" class="form-control">
+    <span asp-validation-for="Price" class="text-danger"></span>
 
     
 

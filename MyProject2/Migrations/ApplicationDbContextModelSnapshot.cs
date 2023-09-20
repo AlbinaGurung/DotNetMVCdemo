@@ -224,7 +224,7 @@ namespace MyProject2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MyProject2.Models.Product1", b =>
+            modelBuilder.Entity("MyProject2.Models.Product2", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -233,7 +233,6 @@ namespace MyProject2.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Price")
@@ -241,7 +240,27 @@ namespace MyProject2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("inv_unit");
+                    b.ToTable("in_prod");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Coke",
+                            Price = 40
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Sprite",
+                            Price = 50
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sprite",
+                            Price = 50
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

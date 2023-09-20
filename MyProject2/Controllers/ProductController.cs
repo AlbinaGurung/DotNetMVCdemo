@@ -1,15 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MyProject2.Data;
 using MyProject2.Models;
 using MyProject2.ViewModels;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MyProject2.Controllers
 {
     public class ProductController : Controller
     {
 
+        private readonly ApplicationDbContext _context;
 
+        public ProductController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-        List<Product> ProductList = new List<Product>(){
+        readonly List<Product> ProductList = new(){
             new Product()
             {
                 ProductName = "Sprite",
@@ -34,29 +44,84 @@ namespace MyProject2.Controllers
           };
 
 
-        public IActionResult Index(string? search = null)
+        public async Task<IActionResult> Index(string? search = null)
         {
-            var products = new List<Product>();
+            var products = new ProductSearchVm();
+          
             if (!String.IsNullOrEmpty(search))
             {
-                products = ProductList.Where(x => x.ProductName.Contains(search)).ToList();
+                products.data= await _context.Units.Where(x => x.Name.Contains(search)).ToListAsync();
             }
             else
             {
-                products = ProductList.ToList();
+                products.data = await _context.Units.ToListAsync();
             }
             return View(products);
         }
-        public  IActionResult add()
+        public  IActionResult Add()
+
+        {
+           
+
+            return View();  
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(ProductAddVm vm)
         {
 
-            return View();
+            /*  try
+              {
+                  if ((vm.Price!=null) && !String.IsNullOrEmpty(vm.Name))
+                  {
+                      Product2 item = new()
+                      {
+                          Id =vm.Id,
+                          Price=vm.Price,
+                          Name=vm.Name
+                      };
+
+                      _context.Units?.Add(item);
+                      await _context.SaveChangesAsync();
+                      return RedirectToAction("Index");
+                  }
+                  else
+                  {
+
+                      throw new Exception("NULL");
+                  }
+              }
+              catch(Exception ex)
+              {
+                  return View("Error");
+              }*/
+            try
+            {
+             
+                    Product2 item = new()
+                    {
+                        
+                        Price=vm.Price,
+                        Name=vm.Name
+                    };
+
+                    _context.Units?.Add(item);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+               
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+
+
+
         }
         
         public IActionResult Edit(int id)
         {
             //searching for the item in databse whose id is equal to the id passed from the page
-            var item=ProductList.Where(x => x.ProductId == id).FirstOrDefault();
+            var item=_context.Units.Where(x => x.Id == id).FirstOrDefault();
             try 
             {
                 if (item==null)
@@ -64,8 +129,8 @@ namespace MyProject2.Controllers
                     throw new Exception("Item Not Found");
                 }
                 //giving that found item to the view model to display it to the page
-                var vm = new ProductEditVm();
-                vm.ProductName=item.ProductName;
+                var vm = new ProductEditVm() { Name=item.Name ,Price=item.Price};
+                
                 
                 return View(vm);
             }
@@ -77,9 +142,9 @@ namespace MyProject2.Controllers
 
         }
         [HttpPost]
-        public IActionResult Edit(int id, ProductEditVm vm)
+        public async Task<IActionResult> Edit(int id, ProductEditVm vm)
         {
-            var item= ProductList.FirstOrDefault(x => x.ProductId==id);
+            var item= _context.Units.FirstOrDefault(x => x.Id==id);
            
             try
             {
@@ -89,9 +154,14 @@ namespace MyProject2.Controllers
                 }
 
 
-                item.ProductName=vm.ProductName;
-                
+                item.Name=vm.Name;
+                item.Price=vm.Price;
+
+                _context.Units.Update(item);
+                await _context.SaveChangesAsync();
+                TempData["success"] = "Product updated successfully";
                 return RedirectToAction("Index");
+                
             }
 
             catch (Exception e)

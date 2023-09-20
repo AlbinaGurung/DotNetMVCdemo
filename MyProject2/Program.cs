@@ -14,8 +14,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<DbContext, ApplicationDbContext>();
 
 var app = builder.Build();
+//app.Services.CreateScope().ServiceProvider.GetService<DbContext>().Database.Migrate();
+app.Services.CreateScope().ServiceProvider.GetService<ApplicationDbContext>()!.Database.Migrate();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
