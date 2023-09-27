@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -16,16 +17,12 @@ namespace MyProject2.Data
         }
 
         public DbSet<Product2>? Units { get; set; }
+        public DbSet<Category>? Categories { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Product2>().HasData(
-                new Product2 { Id=1, Name="Coke", Price=40 },
-
-                new Product2 { Id=2, Name="Sprite", Price=50 },
-                new Product2 { Id=3, Name="Sprite", Price=50 });
-         }
+       
+         
+            
+         
 
     }
 }

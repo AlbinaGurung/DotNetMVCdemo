@@ -6,6 +6,7 @@ using MyProject2.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 
 namespace MyProject2.Controllers
 {
@@ -50,50 +51,36 @@ namespace MyProject2.Controllers
           
             if (!String.IsNullOrEmpty(search))
             {
-                products.data= await _context.Units.Where(x => x.Name.Contains(search)).ToListAsync();
-            }
+                products.data= await _context.Units.Where(x => x.Name.Contains(search)).Include(x=>x.Category).ToListAsync();
+                products.DisplayData=await _context.Units.Where(x=>string.IsNullOrEmpty(search) || x.Name.Contains(search))
+                .Select(x=>new ProductDisplayVm()
+                {
+                    Id=x.Id,
+                    Name=x.Name
+                }).ToListAsync();
+             }
             else
             {
                 products.data = await _context.Units.ToListAsync();
             }
             return View(products);
+
+
+         
         }
         public  IActionResult Add()
 
         {
-           
 
-            return View();  
+            var vm = new ProductAddVm();
+            vm.Categories = _context.Categories.ToList();
+            return View(vm);  
         }
         [HttpPost]
         public async Task<IActionResult> Add(ProductAddVm vm)
         {
 
-            /*  try
-              {
-                  if ((vm.Price!=null) && !String.IsNullOrEmpty(vm.Name))
-                  {
-                      Product2 item = new()
-                      {
-                          Id =vm.Id,
-                          Price=vm.Price,
-                          Name=vm.Name
-                      };
-
-                      _context.Units?.Add(item);
-                      await _context.SaveChangesAsync();
-                      return RedirectToAction("Index");
-                  }
-                  else
-                  {
-
-                      throw new Exception("NULL");
-                  }
-              }
-              catch(Exception ex)
-              {
-                  return View("Error");
-              }*/
+           
             try
             {
              
@@ -101,7 +88,8 @@ namespace MyProject2.Controllers
                     {
                         
                         Price=vm.Price,
-                        Name=vm.Name
+                        Name=vm.Name,
+                        CategoryId=vm.CategoryId
                     };
 
                     _context.Units?.Add(item);
@@ -171,7 +159,40 @@ namespace MyProject2.Controllers
                 return View();
         }
 
-         
+       
+
+        
+        public async Task<IActionResult> Delete(int id)
+        {
+            var item = _context.Units.Where(x => x.Id==id).FirstOrDefault();
+            try
+            {
+                if (item==null)
+                {
+                    throw new Exception("Item not found");
+                }
+
+                using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    _context.Units.Remove(item);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Product DELETED successfully";
+                    return RedirectToAction("Index");
+                    tx.Complete();
+                }
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index");
+            }
+
+
+
+        }
+
+
+
+
 
 
     }

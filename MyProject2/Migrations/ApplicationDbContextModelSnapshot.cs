@@ -224,6 +224,23 @@ namespace MyProject2.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MyProject2.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("categories");
+                });
+
             modelBuilder.Entity("MyProject2.Models.Product2", b =>
                 {
                     b.Property<int>("Id")
@@ -231,6 +248,9 @@ namespace MyProject2.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -240,27 +260,9 @@ namespace MyProject2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("in_prod");
+                    b.HasIndex("CategoryId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Coke",
-                            Price = 40
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Sprite",
-                            Price = 50
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Sprite",
-                            Price = 50
-                        });
+                    b.ToTable("in_prod");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -312,6 +314,17 @@ namespace MyProject2.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyProject2.Models.Product2", b =>
+                {
+                    b.HasOne("MyProject2.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

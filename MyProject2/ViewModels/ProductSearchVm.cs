@@ -5,5 +5,7 @@ namespace MyProject2.ViewModels
     {
         public string? Name { get; set; }
         public List<Product2>? data { get; set; }
+
+     public List<ProductDisplayVm> DisplayData;
     }
 }

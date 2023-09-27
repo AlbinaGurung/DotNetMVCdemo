@@ -7,8 +7,7 @@
     "\\MyProject2\\Controllers",
     "\\MyProject2\\Data",
     "\\MyProject2\\Migrations",
-    "\\MyProject2\\Models",
-    "\\MyProject2\\Views\\Product"
+    "\\MyProject2\\Models"
   ],
   "SelectedNode": "\\MyProject2.sln",
   "PreviewInSolutionExplorer": false
